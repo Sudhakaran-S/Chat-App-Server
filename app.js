@@ -7,18 +7,32 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post("/loginuser", (req, res) => {
+app.post("/registeruser",(req,res) => {
+    console.log(req.body)
+    usermodel.registeruser(req.body).then(item => {
+        if(item) {
+            res.status(200).send(item);
+        }
+        else {
+            res.status(400).send()
+        }
+    })
+    .catch(err => {
+        res.status(400).send("user not found");
+    });
+});
+app.post("/loginuser",(req,res) => {
     console.log(req.body)
     usermodel.loginuser(req.body).then(item => {
         if(item) {
-			res.status(200).send(item);
-		}
-		else {
-			res.status(400).send()
-		}
+            res.status(200).send(item);
+        }
+        else {
+            res.status(400).send()
+        }
     })
     .catch(err => {
-        res.status(400).send("Unable to save to database");
+        res.status(400).send("user not found");
     });
 });
 
