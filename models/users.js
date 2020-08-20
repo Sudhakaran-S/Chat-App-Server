@@ -1,16 +1,31 @@
-const Users = require("../schemas/users");
-let registeruser = async (request) => {
-  const query = {name: request.name, password: request.displayname, email: request.email, password: request.password};
-  const addquery = new Users(query);
-  const userinfo = await addquery.save();
-  return userinfo;
+const Users = require("../schemas/users")
+let loginUser = async (request) => {
+  const userinfo = await Users.find({email: request.email, password: request.password });
+  console.log(userinfo)
+  return userinfo
 }
-let loginuser = async (request) => {
-  const query = {email: request.email, password: request.password };
-  const userinfo = await Users.find(query);
-  return userinfo;
+
+let userRegistration = async (params) => {
+    let query = {
+    	name: params.name,
+      displayname: params.displayname,
+    	email: params.email,
+    	password: params.password
+    }   
+    let add = new Users(query)
+    let result = await add.save()
+    return result
 }
+
+let userList = async () => {
+	const userinfo = await Users.find()
+    //console.log(userinfo)
+	return userinfo
+}
+
+
 module.exports = {
-    registeruser,
-    loginuser
+    loginUser,
+    userRegistration, 
+    userList
 };
