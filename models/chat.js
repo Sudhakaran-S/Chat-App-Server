@@ -9,18 +9,26 @@ let chatInsert = async (params) => {
     	receiver_id: params.receiver_id,
         sender_id: params.sender_id,
         text: params.text,
-        chatdate: params.chatdate
+        createdAt: params.chatdate
     } 
     let add = new Chat(query)
     let result = await add.save()
    // console.log(result, "Result");
     return result
 }
-let getChatList = async (params) => {
-    let result = await Chat.find().sort({"createAt":-1})
-    return result
+let getChatList= async(params) => {
+	let result= await Chat.find ({
+	 $or: [
+	 {
+	   $and: [{receiver_id: params.receiver_id},{sender_id:params.sender_id}] 
+	  },
+	  {
+	   $and: [{receiver_id: params.sender_id},{sender_id:params.receiver_id}] 
+	  } 
+	     ]  
+	   }).sort({"createdAt":-1})                               	
+	return result
 }
-
 
 module.exports = {
     chatInsert,
